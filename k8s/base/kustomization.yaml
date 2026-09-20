@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - pvc.yaml
+  - hpa.yaml
+
+configMapGenerator:
+  - name: voice-bank-bot-config
+    literals:
+      - MODEL_NAME=gpt-4o-mini
+      - STT_LANGUAGE=pl
+      - TTS_VOICE=alloy
+  - name: voice-bank-bot-faq
+    files:
+      - faq.md 
+
+images: 
+  - name: voice-bank-bot
+    newTag: v4

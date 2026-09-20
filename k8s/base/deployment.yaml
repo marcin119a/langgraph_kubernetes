@@ -21,6 +21,11 @@ spec:
           envFrom:
             - secretRef:
                 name: voice-bank-bot-secrets
+            - configMapRef:
+                name: voice-bank-bot-config
+          env:
+            - name: FAQ_PATH
+              value: /app/faq/faq.md
           resources:
             requests:
               cpu: 200m
@@ -43,47 +48,12 @@ spec:
           volumeMounts:
             - name: uploads
               mountPath: /app/data/uploads
+            - name: faq
+              mountPath: /app/faq # osobny katalog w którym mamy faq.md z ConfigMap
       volumes:
+        - name: faq
+          configMap:
+            name: voice-bank-bot-faq
         - name: uploads
           persistentVolumeClaim:
             claimName: voice-bank-bot-uploads
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: voice-bank-bot-uploads
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: voice-bank-bot
-spec:
-  selector:
-    app: voice-bank-bot
-  ports:
-    - port: 80
-      targetPort: 8020
----
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: voice-bank-bot
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: voice-bank-bot
-  minReplicas: 2
-  maxReplicas: 5
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 50
