@@ -5,3 +5,10 @@ resources:
   - ../../base
 
 namespace: bot-dev
+
+configMapGenerator:
+  - name: voice-bank-bot-config
+    behavior: merge # dopisz/nadpisz klucze z base
+    literals:
+      - MODEL_NAME=gpt-4o
+      - TTS_VOICE=alloy

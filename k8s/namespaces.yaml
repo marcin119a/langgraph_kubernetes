@@ -13,11 +13,18 @@ metadata:
     env: prod
 ---
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: bot-staging
+  labels:
+    env: staging
+---
+apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: bot-quota
   namespace: bot-dev # quota działa tylko w tym namespace
 spec:
   hard:
-    requests.cpu: 500m # 2 pody po 200m się mieszczą, trzeci już nie
+    requests.cpu: 700m # 2 pody po 200m się mieszczą, trzeci już nie
     requests.memory: 1Gi

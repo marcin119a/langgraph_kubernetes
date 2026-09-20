@@ -11,8 +11,12 @@ configMapGenerator:
   - name: voice-bank-bot-config
     literals:
       - MODEL_NAME=gpt-4o-mini
+      - STT_MODEL=whisper-1
       - STT_LANGUAGE=pl
+      - TTS_MODEL=gpt-4o-mini-tts
       - TTS_VOICE=alloy
+      - LANGSMITH_TRACING=true
+      - LANGSMITH_PROJECT=voice-bank-bot
   - name: voice-bank-bot-faq
     files:
       - faq.md 
